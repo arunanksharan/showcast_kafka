@@ -1,5 +1,6 @@
 import { Kafka, logLevel } from 'kafkajs';
 import { assignRoom } from '../room/assign';
+import { updateRoomStatusOnLeave } from '../room/onLeave';
 
 const kafka = new Kafka({
   brokers: ['internal-heron-13399-us1-kafka.upstash.io:9092'],
@@ -26,9 +27,17 @@ export const runConsumer = async () => {
         value: message.value?.toString(),
       });
       console.log('Message received by consumer, line 27');
-      const roomId: string | null = message.value?.toString() || null;
-      if (roomId !== null) {
-        await assignRoom(roomId);
+      const roomIdWithAction: string | null = message.value?.toString() || null;
+      if (roomIdWithAction !== null) {
+        const [roomId, action] = roomIdWithAction.split('||');
+        console.log('Room ID:', roomId);
+        console.log('Action:', action);
+        if (action === 'join') {
+          await assignRoom(roomId);
+        }
+        if (action === 'leave') {
+          await updateRoomStatusOnLeave(roomId);
+        }
       }
     },
   });
