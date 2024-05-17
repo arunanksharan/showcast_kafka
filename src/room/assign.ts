@@ -62,13 +62,13 @@ export async function assignRoom(fc_id: string) {
       roomId = await createHuddleRoom();
 
       // asign it to the user id as well in user-room table
-      const { data: newUserRoom, error } = await supabase
-        .from('user_room')
-        .upsert({
-          fc_id: fc_id,
-          room_id: roomId,
-        })
-        .select();
+      // const { data: newUserRoom, error } = await supabase
+      //   .from('user_room')
+      //   .upsert({
+      //     fc_id: fc_id,
+      //     room_id: roomId,
+      //   })
+      //   .select();
 
       // Update it in supabase
       await updateSupabaseWithHuddleRoom(roomId);
