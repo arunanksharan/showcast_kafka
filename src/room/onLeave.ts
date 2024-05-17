@@ -1,4 +1,4 @@
-export async function updateRoomStatusOnLeave(roomId: string) {
+export async function updateRoomStatusOnLeave(userId: string, roomId: string) {
   console.log('RoomId from updateRoomStatus', roomId);
   if (!roomId) return;
   const response = await fetch('https://cast.show/api/room/update', {

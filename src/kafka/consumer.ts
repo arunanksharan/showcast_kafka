@@ -27,16 +27,17 @@ export const runConsumer = async () => {
         value: message.value?.toString(),
       });
       console.log('Message received by consumer, line 27');
-      const roomIdWithAction: string | null = message.value?.toString() || null;
-      if (roomIdWithAction !== null) {
-        const [roomId, action] = roomIdWithAction.split('||');
+      const userRoomAction: string | null = message.value?.toString() || null;
+      if (userRoomAction !== null) {
+        const [userId, roomId, action] = userRoomAction.split('||');
+        console.log('User ID:', userId);
         console.log('Room ID:', roomId);
         console.log('Action:', action);
         if (action === 'join') {
-          await assignRoom(roomId);
+          await assignRoom(userId);
         }
         if (action === 'leave') {
-          await updateRoomStatusOnLeave(roomId);
+          await updateRoomStatusOnLeave(userId, roomId);
         }
       }
     },
