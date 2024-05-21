@@ -33,11 +33,23 @@ export const runConsumer = async () => {
         console.log('User ID:', userId);
         console.log('Room ID:', roomId);
         console.log('Action:', action);
-        if (action === 'join') {
-          await assignRoom(userId);
-        }
-        if (action === 'leave') {
-          await updateRoomStatusOnLeave(userId, roomId);
+        try {
+          if (action === 'join') {
+            await assignRoom(userId);
+          }
+          if (action === 'leave') {
+            const result = await updateRoomStatusOnLeave(userId, roomId);
+            if (result.error) {
+              console.error(
+                'Error updating room status on leave:',
+                result.error
+              );
+            } else {
+              console.log(result.message);
+            }
+          }
+        } catch (error) {
+          console.error('Error processing message:', error);
         }
       }
     },
